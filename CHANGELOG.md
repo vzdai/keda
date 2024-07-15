@@ -58,6 +58,7 @@ To learn more about active deprecations, we recommend checking [GitHub Discussio
 ### New
 
 - **CloudEventSource**: Introduce ClusterCloudEventSource ([#3533](https://github.com/kedacore/keda/issues/3533))
+- **General**: Fix admission webhook validation not denying invalid fallbacks and replica counts ([#5954](https://github.com/kedacore/keda/issues/5954))
 
 #### Experimental
 
