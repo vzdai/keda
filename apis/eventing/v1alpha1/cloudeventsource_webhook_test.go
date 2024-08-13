@@ -145,15 +145,13 @@ var _ = It("validate cloudeventsource when event type is not support", func() {
 
 	spec := createCloudEventSourceSpecWithExcludeEventType("keda.scaledobject.ready.v1.test")
 	ces := createCloudEventSource("nsccesexcludenotsupport", namespaceName, spec)
-	Eventually(func() error {
-		return k8sClient.Create(context.Background(), ces)
-	}).Should(HaveOccurred())
+	err = k8sClient.Create(context.Background(), ces)
+	Expect(err).To(HaveOccurred())
 
 	spec = createCloudEventSourceSpecWithIncludeEventType("keda.scaledobject.ready.v1.test")
 	ces = createCloudEventSource("nsccesincludenotsupport", namespaceName, spec)
-	Eventually(func() error {
-		return k8sClient.Create(context.Background(), ces)
-	}).Should(HaveOccurred())
+	err = k8sClient.Create(context.Background(), ces)
+	Expect(err).To(HaveOccurred())
 })
 
 var _ = It("validate cloudeventsource when event type is support", func() {
@@ -165,17 +163,15 @@ var _ = It("validate cloudeventsource when event type is support", func() {
 	for k, eventType := range AllEventTypes {
 		spec := createCloudEventSourceSpecWithExcludeEventType(eventType)
 		ces := createCloudEventSource("cloudeventexclude"+strconv.Itoa(k), namespaceName, spec)
-		Eventually(func() error {
-			return k8sClient.Create(context.Background(), ces)
-		}).ShouldNot(HaveOccurred())
+		err = k8sClient.Create(context.Background(), ces)
+		Expect(err).ToNot(HaveOccurred())
 	}
 
 	for k, eventType := range AllEventTypes {
 		spec := createCloudEventSourceSpecWithIncludeEventType(eventType)
 		ces := createCloudEventSource("cloudeventinclude"+strconv.Itoa(k), namespaceName, spec)
-		Eventually(func() error {
-			return k8sClient.Create(context.Background(), ces)
-		}).ShouldNot(HaveOccurred())
+		err = k8sClient.Create(context.Background(), ces)
+		Expect(err).ToNot(HaveOccurred())
 	}
 })
 
@@ -187,9 +183,8 @@ var _ = It("validate invalid cloudeventsource which eventtype in both excludetyp
 
 	spec := createInvalidCloudEventSourceSpe(ScaledObjectReadyType)
 	ces := createCloudEventSource("invalidcloudevent", namespaceName, spec)
-	Eventually(func() error {
-		return k8sClient.Create(context.Background(), ces)
-	}).Should(HaveOccurred())
+	err = k8sClient.Create(context.Background(), ces)
+	Expect(err).To(HaveOccurred())
 })
 
 // -------------------------------------------------------------------------- //

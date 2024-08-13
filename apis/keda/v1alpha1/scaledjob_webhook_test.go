@@ -36,9 +36,8 @@ var _ = It("should validate empty triggers in ScaledJob", func() {
 
 	sj := createScaledJob(sjName, namespaceName, []ScaleTriggers{})
 
-	Eventually(func() error {
-		return k8sClient.Create(context.Background(), sj)
-	}).Should(HaveOccurred())
+	err = k8sClient.Create(context.Background(), sj)
+	Expect(err).To(HaveOccurred())
 })
 
 // -------------------------------------------------------------------------- //

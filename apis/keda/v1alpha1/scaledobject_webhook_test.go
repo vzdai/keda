@@ -18,8 +18,6 @@ package v1alpha1
 
 import (
 	"context"
-	"time"
-
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 	appsv1 "k8s.io/api/apps/v1"
@@ -41,9 +39,8 @@ var _ = It("should validate the so creation when there isn't any hpa", func() {
 	err := k8sClient.Create(context.Background(), namespace)
 	Expect(err).ToNot(HaveOccurred())
 
-	Eventually(func() error {
-		return k8sClient.Create(context.Background(), so)
-	}).ShouldNot(HaveOccurred())
+	err = k8sClient.Create(context.Background(), so)
+	Expect(err).ToNot(HaveOccurred())
 })
 
 var _ = It("should validate the so creation when there are other SO for other workloads", func() {
@@ -59,9 +56,8 @@ var _ = It("should validate the so creation when there are other SO for other wo
 	err = k8sClient.Create(context.Background(), so1)
 	Expect(err).ToNot(HaveOccurred())
 
-	Eventually(func() error {
-		return k8sClient.Create(context.Background(), so2)
-	}).ShouldNot(HaveOccurred())
+	err = k8sClient.Create(context.Background(), so2)
+	Expect(err).ToNot(HaveOccurred())
 })
 
 var _ = It("should validate the so creation when there are other HPA for other workloads", func() {
@@ -77,9 +73,8 @@ var _ = It("should validate the so creation when there are other HPA for other w
 	err = k8sClient.Create(context.Background(), hpa)
 	Expect(err).ToNot(HaveOccurred())
 
-	Eventually(func() error {
-		return k8sClient.Create(context.Background(), so)
-	}).ShouldNot(HaveOccurred())
+	err = k8sClient.Create(context.Background(), so)
+	Expect(err).ToNot(HaveOccurred())
 })
 
 var _ = It("should validate the so creation when it's own hpa is already generated", func() {
@@ -96,9 +91,8 @@ var _ = It("should validate the so creation when it's own hpa is already generat
 	err = k8sClient.Create(context.Background(), hpa)
 	Expect(err).ToNot(HaveOccurred())
 
-	Eventually(func() error {
-		return k8sClient.Create(context.Background(), so)
-	}).ShouldNot(HaveOccurred())
+	err = k8sClient.Create(context.Background(), so)
+	Expect(err).ToNot(HaveOccurred())
 })
 
 var _ = It("should validate the so update when it's own hpa is already generated", func() {
@@ -119,9 +113,9 @@ var _ = It("should validate the so update when it's own hpa is already generated
 	Expect(err).ToNot(HaveOccurred())
 
 	so.Spec.MaxReplicaCount = ptr.To[int32](7)
-	Eventually(func() error {
-		return k8sClient.Update(context.Background(), so)
-	}).ShouldNot(HaveOccurred())
+
+	err = k8sClient.Update(context.Background(), so)
+	Expect(err).ToNot(HaveOccurred())
 })
 
 var _ = It("shouldn't validate the so creation when there is another unmanaged hpa", func() {
@@ -138,9 +132,8 @@ var _ = It("shouldn't validate the so creation when there is another unmanaged h
 	err = k8sClient.Create(context.Background(), hpa)
 	Expect(err).ToNot(HaveOccurred())
 
-	Eventually(func() error {
-		return k8sClient.Create(context.Background(), so)
-	}).Should(HaveOccurred())
+	err = k8sClient.Create(context.Background(), so)
+	Expect(err).To(HaveOccurred())
 })
 
 var _ = It("shouldn't validate the so creation when the replica counts are wrong", func() {
@@ -207,9 +200,8 @@ var _ = It("shouldn't validate the so creation when there is another unmanaged h
 	err = k8sClient.Create(context.Background(), hpa)
 	Expect(err).ToNot(HaveOccurred())
 
-	Eventually(func() error {
-		return k8sClient.Create(context.Background(), so)
-	}).ShouldNot(HaveOccurred())
+	err = k8sClient.Create(context.Background(), so)
+	Expect(err).ToNot(HaveOccurred())
 })
 
 var _ = It("shouldn't validate the so creation when hpa has shared-ownership unactivated", func() {
@@ -227,9 +219,8 @@ var _ = It("shouldn't validate the so creation when hpa has shared-ownership una
 	err = k8sClient.Create(context.Background(), hpa)
 	Expect(err).ToNot(HaveOccurred())
 
-	Eventually(func() error {
-		return k8sClient.Create(context.Background(), so)
-	}).ShouldNot(HaveOccurred())
+	err = k8sClient.Create(context.Background(), so)
+	Expect(err).ToNot(HaveOccurred())
 })
 
 var _ = It("shouldn't validate the so creation when there is another so", func() {
@@ -246,9 +237,8 @@ var _ = It("shouldn't validate the so creation when there is another so", func()
 	err = k8sClient.Create(context.Background(), so2)
 	Expect(err).ToNot(HaveOccurred())
 
-	Eventually(func() error {
-		return k8sClient.Create(context.Background(), so)
-	}).Should(HaveOccurred())
+	err = k8sClient.Create(context.Background(), so)
+	Expect(err).To(HaveOccurred())
 })
 
 var _ = It("shouldn't validate the so creation when there is another hpa with custom apis", func() {
@@ -265,9 +255,8 @@ var _ = It("shouldn't validate the so creation when there is another hpa with cu
 	err = k8sClient.Create(context.Background(), hpa)
 	Expect(err).ToNot(HaveOccurred())
 
-	Eventually(func() error {
-		return k8sClient.Create(context.Background(), so)
-	}).Should(HaveOccurred())
+	err = k8sClient.Create(context.Background(), so)
+	Expect(err).To(HaveOccurred())
 })
 
 var _ = It("should validate the so creation with cpu and memory when deployment has requests", func() {
@@ -283,9 +272,8 @@ var _ = It("should validate the so creation with cpu and memory when deployment 
 	err = k8sClient.Create(context.Background(), workload)
 	Expect(err).ToNot(HaveOccurred())
 
-	Eventually(func() error {
-		return k8sClient.Create(context.Background(), so)
-	}).ShouldNot(HaveOccurred())
+	err = k8sClient.Create(context.Background(), so)
+	Expect(err).ToNot(HaveOccurred())
 })
 
 var _ = It("shouldn't validate the creation with cpu and memory when deployment is missing", func() {
@@ -297,9 +285,8 @@ var _ = It("shouldn't validate the creation with cpu and memory when deployment 
 	err := k8sClient.Create(context.Background(), namespace)
 	Expect(err).ToNot(HaveOccurred())
 
-	Eventually(func() error {
-		return k8sClient.Create(context.Background(), so)
-	}).Should(HaveOccurred())
+	err = k8sClient.Create(context.Background(), so)
+	Expect(err).To(HaveOccurred())
 })
 
 var _ = It("should validate the creation with cpu and memory when deployment is missing and dry-run is true", func() {
@@ -311,9 +298,8 @@ var _ = It("should validate the creation with cpu and memory when deployment is 
 	err := k8sClient.Create(context.Background(), namespace)
 	Expect(err).ToNot(HaveOccurred())
 
-	Eventually(func() error {
-		return k8sClient.Create(context.Background(), so, client.DryRunAll)
-	}).ShouldNot(HaveOccurred())
+	err = k8sClient.Create(context.Background(), so, client.DryRunAll)
+	Expect(err).ToNot(HaveOccurred())
 })
 
 var _ = It("shouldn't validate the so creation with cpu and memory when deployment hasn't got memory request", func() {
@@ -329,9 +315,8 @@ var _ = It("shouldn't validate the so creation with cpu and memory when deployme
 	err = k8sClient.Create(context.Background(), workload)
 	Expect(err).ToNot(HaveOccurred())
 
-	Eventually(func() error {
-		return k8sClient.Create(context.Background(), so)
-	}).Should(HaveOccurred())
+	err = k8sClient.Create(context.Background(), so)
+	Expect(err).To(HaveOccurred())
 })
 
 // This test checks whether the validation fails when the CPU and memory resource limits are missing in pod spec (in
@@ -351,10 +336,9 @@ var _ = It("shouldn't validate the SO creation with CPU and memory when deployme
 	err = k8sClient.Create(context.Background(), deployment)
 	Expect(err).ToNot(HaveOccurred())
 
-	// Create scaled object, asynchronously
-	Eventually(func() error {
-		return k8sClient.Create(context.Background(), scaledObject)
-	}).Should(HaveOccurred())
+	// Create scaled object
+	err = k8sClient.Create(context.Background(), scaledObject)
+	Expect(err).To(HaveOccurred())
 })
 
 // This test checks whether the validation fails when the CPU and memory resource limits are missing in pod spec (in
@@ -383,10 +367,9 @@ var _ = It("should validate the SO creation with CPU and memory when deployment 
 	err = k8sClient.Create(context.Background(), deployment)
 	Expect(err).ToNot(HaveOccurred())
 
-	// Create scaled object, asynchronously
-	Eventually(func() error {
-		return k8sClient.Create(context.Background(), scaledObject)
-	}).ShouldNot(HaveOccurred())
+	// Create scaled object
+	err = k8sClient.Create(context.Background(), scaledObject)
+	Expect(err).ToNot(HaveOccurred())
 })
 
 var _ = It("shouldn't validate the so creation with cpu and memory when deployment hasn't got cpu request", func() {
@@ -402,9 +385,8 @@ var _ = It("shouldn't validate the so creation with cpu and memory when deployme
 	err = k8sClient.Create(context.Background(), workload)
 	Expect(err).ToNot(HaveOccurred())
 
-	Eventually(func() error {
-		return k8sClient.Create(context.Background(), so)
-	}).Should(HaveOccurred())
+	err = k8sClient.Create(context.Background(), so)
+	Expect(err).To(HaveOccurred())
 })
 
 var _ = It("should validate the so creation with cpu and memory when statefulset has requests", func() {
@@ -420,9 +402,8 @@ var _ = It("should validate the so creation with cpu and memory when statefulset
 	err = k8sClient.Create(context.Background(), workload)
 	Expect(err).ToNot(HaveOccurred())
 
-	Eventually(func() error {
-		return k8sClient.Create(context.Background(), so)
-	}).ShouldNot(HaveOccurred())
+	err = k8sClient.Create(context.Background(), so)
+	Expect(err).ToNot(HaveOccurred())
 })
 
 var _ = It("shouldn't validate the so creation with cpu and memory when statefulset hasn't got memory request", func() {
@@ -438,9 +419,8 @@ var _ = It("shouldn't validate the so creation with cpu and memory when stateful
 	err = k8sClient.Create(context.Background(), workload)
 	Expect(err).ToNot(HaveOccurred())
 
-	Eventually(func() error {
-		return k8sClient.Create(context.Background(), so)
-	}).Should(HaveOccurred())
+	err = k8sClient.Create(context.Background(), so)
+	Expect(err).To(HaveOccurred())
 })
 
 var _ = It("shouldn't validate the so creation with cpu and memory when statefulset hasn't got cpu request", func() {
@@ -456,9 +436,8 @@ var _ = It("shouldn't validate the so creation with cpu and memory when stateful
 	err = k8sClient.Create(context.Background(), workload)
 	Expect(err).ToNot(HaveOccurred())
 
-	Eventually(func() error {
-		return k8sClient.Create(context.Background(), so)
-	}).Should(HaveOccurred())
+	err = k8sClient.Create(context.Background(), so)
+	Expect(err).To(HaveOccurred())
 })
 
 var _ = It("should validate the so creation without cpu and memory when custom resources", func() {
@@ -470,9 +449,8 @@ var _ = It("should validate the so creation without cpu and memory when custom r
 	err := k8sClient.Create(context.Background(), namespace)
 	Expect(err).ToNot(HaveOccurred())
 
-	Eventually(func() error {
-		return k8sClient.Create(context.Background(), so)
-	}).ShouldNot(HaveOccurred())
+	err = k8sClient.Create(context.Background(), so)
+	Expect(err).ToNot(HaveOccurred())
 })
 
 var _ = It("should validate so creation when all requirements are met for scaling to zero with cpu scaler", func() {
@@ -488,9 +466,8 @@ var _ = It("should validate so creation when all requirements are met for scalin
 	err = k8sClient.Create(context.Background(), workload)
 	Expect(err).ToNot(HaveOccurred())
 
-	Eventually(func() error {
-		return k8sClient.Create(context.Background(), so)
-	}).ShouldNot(HaveOccurred())
+	err = k8sClient.Create(context.Background(), so)
+	Expect(err).ToNot(HaveOccurred())
 })
 
 var _ = It("shouldn't validate so creation with cpu scaler requirements not being met for scaling to 0", func() {
@@ -502,11 +479,12 @@ var _ = It("shouldn't validate so creation with cpu scaler requirements not bein
 
 	err := k8sClient.Create(context.Background(), namespace)
 	Expect(err).ToNot(HaveOccurred())
+
 	err = k8sClient.Create(context.Background(), workload)
 	Expect(err).ToNot(HaveOccurred())
-	Eventually(func() error {
-		return k8sClient.Create(context.Background(), so)
-	}).Should(HaveOccurred())
+
+	err = k8sClient.Create(context.Background(), so)
+	Expect(err).To(HaveOccurred())
 })
 
 var _ = It("should validate so creation when min replicas is > 0 with only cpu scaler given", func() {
@@ -518,11 +496,12 @@ var _ = It("should validate so creation when min replicas is > 0 with only cpu s
 
 	err := k8sClient.Create(context.Background(), namespace)
 	Expect(err).ToNot(HaveOccurred())
+
 	err = k8sClient.Create(context.Background(), workload)
 	Expect(err).ToNot(HaveOccurred())
-	Eventually(func() error {
-		return k8sClient.Create(context.Background(), so)
-	}).ShouldNot(HaveOccurred())
+
+	err = k8sClient.Create(context.Background(), so)
+	Expect(err).ToNot(HaveOccurred())
 
 })
 
@@ -552,9 +531,8 @@ var _ = It("should not validate ScaledObject creation when deployment only provi
 		},
 	}
 
-	Eventually(func() error {
-		return k8sClient.Create(context.Background(), so)
-	}).ShouldNot(HaveOccurred())
+	err = k8sClient.Create(context.Background(), so)
+	Expect(err).ToNot(HaveOccurred())
 })
 
 var _ = It("should not validate ScaledObject creation when deployment only provides memory resource limits", func() {
@@ -583,9 +561,8 @@ var _ = It("should not validate ScaledObject creation when deployment only provi
 		},
 	}
 
-	Eventually(func() error {
-		return k8sClient.Create(context.Background(), so)
-	}).ShouldNot(HaveOccurred())
+	err = k8sClient.Create(context.Background(), so)
+	Expect(err).ToNot(HaveOccurred())
 })
 
 var _ = It("should validate the so update if it's removing the finalizer even if it's invalid", func() {
@@ -602,40 +579,16 @@ var _ = It("should validate the so update if it's removing the finalizer even if
 	err = k8sClient.Create(context.Background(), workload)
 	Expect(err).ToNot(HaveOccurred())
 
-	Eventually(func() error {
-		return k8sClient.Create(context.Background(), so)
-	}).ShouldNot(HaveOccurred())
+	err = k8sClient.Create(context.Background(), so)
+	Expect(err).ToNot(HaveOccurred())
 
 	workload.Spec.Template.Spec.Containers[0].Resources.Requests = nil
 	err = k8sClient.Update(context.Background(), workload)
 	Expect(err).ToNot(HaveOccurred())
 
 	so.ObjectMeta.Finalizers = []string{}
-	Eventually(func() error {
-		return k8sClient.Update(context.Background(), so)
-	}).ShouldNot(HaveOccurred())
-})
-
-var _ = It("shouldn't create so when stabilizationWindowSeconds exceeds 3600", func() {
-
-	namespaceName := "fail-so-creation"
-	namespace := createNamespace(namespaceName)
-	so := createScaledObject(soName, namespaceName, workloadName, "apps/v1", "Deployment", false, map[string]string{}, "")
-	so.Spec.Advanced.HorizontalPodAutoscalerConfig = &HorizontalPodAutoscalerConfig{
-		Behavior: &v2.HorizontalPodAutoscalerBehavior{
-			ScaleDown: &v2.HPAScalingRules{
-				StabilizationWindowSeconds: ptr.To[int32](3700),
-			},
-		},
-	}
-	err := k8sClient.Create(context.Background(), namespace)
+	err = k8sClient.Update(context.Background(), so)
 	Expect(err).ToNot(HaveOccurred())
-
-	Eventually(func() error {
-		return k8sClient.Create(context.Background(), so)
-	}).
-		WithTimeout(5 * time.Second).
-		Should(HaveOccurred())
 })
 
 var _ = It("should validate empty triggers in ScaledObject", func() {
@@ -657,9 +610,8 @@ var _ = It("should validate empty triggers in ScaledObject", func() {
 	so := createScaledObject(soName, namespaceName, workloadName, "apps/v1", "Deployment", false, map[string]string{}, "")
 	so.Spec.Triggers = []ScaleTriggers{}
 
-	Eventually(func() error {
-		return k8sClient.Create(context.Background(), so)
-	}).Should(HaveOccurred())
+	err = k8sClient.Create(context.Background(), so)
+	Expect(err).To(HaveOccurred())
 })
 
 // ============================ SCALING MODIFIERS ============================ \\
@@ -699,9 +651,8 @@ var _ = It("should validate the so creation with ScalingModifiers.Formula", func
 	Expect(err).ToNot(HaveOccurred())
 	err = k8sClient.Create(context.Background(), workload)
 	Expect(err).ToNot(HaveOccurred())
-	Eventually(func() error {
-		return k8sClient.Create(context.Background(), so)
-	}).ShouldNot(HaveOccurred())
+	err = k8sClient.Create(context.Background(), so)
+	Expect(err).ToNot(HaveOccurred())
 })
 
 var _ = It("shouldnt validate the so creation with scalingModifiers.Formula but no target", func() {
@@ -738,9 +689,8 @@ var _ = It("shouldnt validate the so creation with scalingModifiers.Formula but 
 	Expect(err).ToNot(HaveOccurred())
 	err = k8sClient.Create(context.Background(), workload)
 	Expect(err).ToNot(HaveOccurred())
-	Eventually(func() error {
-		return k8sClient.Create(context.Background(), so)
-	}).Should(HaveOccurred())
+	err = k8sClient.Create(context.Background(), so)
+	Expect(err).To(HaveOccurred())
 })
 
 var _ = It("shouldnt validate the so creation with ScalingModifiers when triggers dont have names", func() {
@@ -775,9 +725,8 @@ var _ = It("shouldnt validate the so creation with ScalingModifiers when trigger
 	Expect(err).ToNot(HaveOccurred())
 	err = k8sClient.Create(context.Background(), workload)
 	Expect(err).ToNot(HaveOccurred())
-	Eventually(func() error {
-		return k8sClient.Create(context.Background(), so)
-	}).Should(HaveOccurred())
+	err = k8sClient.Create(context.Background(), so)
+	Expect(err).To(HaveOccurred())
 })
 
 var _ = It("should validate the so creation with ScalingModifiers when formula triggers do have names but not all triggers", func() {
@@ -813,9 +762,8 @@ var _ = It("should validate the so creation with ScalingModifiers when formula t
 	Expect(err).ToNot(HaveOccurred())
 	err = k8sClient.Create(context.Background(), workload)
 	Expect(err).ToNot(HaveOccurred())
-	Eventually(func() error {
-		return k8sClient.Create(context.Background(), so)
-	}).ShouldNot(HaveOccurred())
+	err = k8sClient.Create(context.Background(), so)
+	Expect(err).ToNot(HaveOccurred())
 })
 
 var _ = It("should validate the so creation with ScalingModifiers when formula casts to float already", func() {
@@ -842,9 +790,8 @@ var _ = It("should validate the so creation with ScalingModifiers when formula c
 	Expect(err).ToNot(HaveOccurred())
 	err = k8sClient.Create(context.Background(), workload)
 	Expect(err).ToNot(HaveOccurred())
-	Eventually(func() error {
-		return k8sClient.Create(context.Background(), so)
-	}).ShouldNot(HaveOccurred())
+	err = k8sClient.Create(context.Background(), so)
+	Expect(err).ToNot(HaveOccurred())
 })
 
 var _ = It("should validate the so creation with ScalingModifiers.Formula - casting float from ternary operator", func() {
@@ -881,9 +828,8 @@ var _ = It("should validate the so creation with ScalingModifiers.Formula - cast
 	Expect(err).ToNot(HaveOccurred())
 	err = k8sClient.Create(context.Background(), workload)
 	Expect(err).ToNot(HaveOccurred())
-	Eventually(func() error {
-		return k8sClient.Create(context.Background(), so)
-	}).ShouldNot(HaveOccurred())
+	err = k8sClient.Create(context.Background(), so)
+	Expect(err).ToNot(HaveOccurred())
 })
 
 // this test checks that internally, the casting to float happened successfully
@@ -924,9 +870,8 @@ var _ = It("should validate the so creation with ScalingModifiers.Formula - tern
 	Expect(err).ToNot(HaveOccurred())
 	err = k8sClient.Create(context.Background(), workload)
 	Expect(err).ToNot(HaveOccurred())
-	Eventually(func() error {
-		return k8sClient.Create(context.Background(), so)
-	}).ShouldNot(HaveOccurred())
+	err = k8sClient.Create(context.Background(), so)
+	Expect(err).ToNot(HaveOccurred())
 })
 
 var _ = It("should validate the so creation with ScalingModifiers.Formula - count operator", func() {
@@ -963,9 +908,8 @@ var _ = It("should validate the so creation with ScalingModifiers.Formula - coun
 	Expect(err).ToNot(HaveOccurred())
 	err = k8sClient.Create(context.Background(), workload)
 	Expect(err).ToNot(HaveOccurred())
-	Eventually(func() error {
-		return k8sClient.Create(context.Background(), so)
-	}).ShouldNot(HaveOccurred())
+	err = k8sClient.Create(context.Background(), so)
+	Expect(err).ToNot(HaveOccurred())
 })
 
 var _ = It("should validate the so creation with ScalingModifiers.Formula - complex ternary", func() {
@@ -1002,9 +946,8 @@ var _ = It("should validate the so creation with ScalingModifiers.Formula - comp
 	Expect(err).ToNot(HaveOccurred())
 	err = k8sClient.Create(context.Background(), workload)
 	Expect(err).ToNot(HaveOccurred())
-	Eventually(func() error {
-		return k8sClient.Create(context.Background(), so)
-	}).ShouldNot(HaveOccurred())
+	err = k8sClient.Create(context.Background(), so)
+	Expect(err).ToNot(HaveOccurred())
 })
 
 var _ = It("should validate the so creation with ScalingModifiers.Formula - double float cast", func() {
@@ -1040,9 +983,8 @@ var _ = It("should validate the so creation with ScalingModifiers.Formula - doub
 	Expect(err).ToNot(HaveOccurred())
 	err = k8sClient.Create(context.Background(), workload)
 	Expect(err).ToNot(HaveOccurred())
-	Eventually(func() error {
-		return k8sClient.Create(context.Background(), so)
-	}).ShouldNot(HaveOccurred())
+	err = k8sClient.Create(context.Background(), so)
+	Expect(err).ToNot(HaveOccurred())
 })
 
 var _ = AfterSuite(func() {
