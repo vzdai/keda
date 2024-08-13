@@ -722,9 +722,8 @@ var _ = Describe("ScaledObjectController", func() {
 		)
 
 		// Create the scaling target.
-		Eventually(func() error {
-			return k8sClient.Create(context.Background(), generateDeployment(deploymentName))
-		}).ShouldNot(HaveOccurred())
+		err := k8sClient.Create(context.Background(), generateDeployment(deploymentName))
+		Expect(err).ToNot(HaveOccurred())
 
 		so := &kedav1alpha1.ScaledObject{
 			ObjectMeta: metav1.ObjectMeta{Name: soName, Namespace: "default"},
@@ -751,9 +750,8 @@ var _ = Describe("ScaledObjectController", func() {
 				},
 			},
 		}
-		Eventually(func() error {
-			return k8sClient.Create(context.Background(), so)
-		}).ShouldNot(HaveOccurred())
+		err = k8sClient.Create(context.Background(), so)
+		Expect(err).ToNot(HaveOccurred())
 
 		// wait so's ready condition Ready
 		Eventually(func() metav1.ConditionStatus {
@@ -801,9 +799,8 @@ var _ = Describe("ScaledObjectController", func() {
 				},
 			},
 		}
-		Eventually(func() error {
-			return k8sClient.Status().Update(ctx, hpa)
-		}).ShouldNot(HaveOccurred())
+		err = k8sClient.Status().Update(ctx, hpa)
+		Expect(err).ToNot(HaveOccurred())
 
 		// hpa metrics will only left CPU metric
 		Eventually(func() int {
